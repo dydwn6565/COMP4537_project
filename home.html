@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax.libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
+    <sciprt src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></sciprt>
+    <title>Home</title>
+    <style>
+        .navbar-nav {
+            margin-left: auto;
+        }
+
+        #valid {
+            visibility: hidden
+        }
+    </style>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark ">
+
+        <ul class="navbar-nav" id="valid">
+            <li class="nav-item">
+                <a class="nav-link" href="patient.html">Patient</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="schedule.html">Schedule</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="medicalStaff.html">Medical staff</a>
+            </li>
+
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="signup.html">SignUp</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">Login</a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class="jumbotron">
+        <h1 class="display=4">Hello</h1>
+        <p class="lead">Main page</p>
+        <hr class="my-4">
+        <p> Please click </p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        </p>
+    </div>
+
+    </div>
+    <script>
+
+        window.addEventListener('load', () => {
+            let URLmessage = window.location.search;
+            if (URLmessage.split("?")[1] == "success") {
+                console.log("lnside")
+                visibleButtons();
+            }
+
+        })
+
+
+        function visibleButtons() {
+
+            document.getElementById("valid").style.visibility = "visible"
+        }
+    </script>
+</body>
+
+</html>

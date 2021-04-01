@@ -1,0 +1,114 @@
+{
+  "swagger": "2.0",
+  "info": {
+      "title": "Clinic API Documentation",
+      "version": "v1"
+  },
+  "paths": {
+      "/signup":{
+          "get":{
+              "tags": ["SignUp"],
+              "operationId": "getUserV1",
+              "summary": "Get current users",
+              "produces":[
+                  "application/json"
+              ],
+              "responses":{
+                  "200":{
+                      "description": "200 OK",
+                      "examples": {
+                          "application/json": {
+                              "email": "abc@gmail.com",
+                              "password": "kNj24w984sddYDdlkdbn3md"
+                          }
+                      }
+                  },
+                  "404":{
+                      "description": "404 Not Found"
+                  },
+                  "500":{
+                      "description": "500 Internal Server Error"
+                  }
+              }
+          },
+          "post": {
+              "tags": ["SignUp"],
+              "operationId": "postUserV1",
+              "summary": "Add a new user to database",
+              "produces":[
+                  "application/xml",
+                  "application/json"
+              ],
+              "parameters": [
+                  {
+                      "in": "body",
+                      "name": "body",
+                      "description": "new user that needs to be added to the database",
+                      "required": true,
+                      "schema": {
+                          "$ref": "#/definitions/SignUp"
+                      }
+                  }
+              ],
+              "responses": {
+                  "default":{
+                      "description": "successful operation"
+                  }
+              },
+              "security": [
+                  {
+                      "user_auth":[
+                          "write: signup",
+                          "read:signup"
+                      ]
+                  }
+              ]
+          }
+      },
+      "/login":{
+          "get": {
+              "tags": ["Login"],
+              "operationId": "postUserV2",
+              "summary": "Check user in database",
+              "produces":[
+                  "application/json"
+              ],
+              "responses": {
+                  "200":{
+                      "description": "200 OK",
+                      "examples": {
+                          "application/json":{
+                              "email": "abc@gmail.com",
+                              "password": "kNj24w984sddYDdlkdbn3md"
+                          }
+                      }
+                  },
+                  "404":{
+                      "description": "404 Not Found"
+                  },
+                  "500":{
+                      "description": "500 Internal Server Error"
+                  }
+              }
+          }
+      }
+  },
+  "definitions": {
+      "SignUp":{
+          "type":"object",
+          "properties": {
+              "id":{
+                  "type":"integer",
+                  "format": "int64"
+              },
+              "email":{
+                  "type":"string"
+              },
+              "password":{
+                  "type":"string"
+              }
+          }
+      }
+  }
+  
+}

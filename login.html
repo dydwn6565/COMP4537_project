@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+
+    <div>
+        <h1>logIn</h1>
+        <span>E-mail</span><input type="text" id="UserId">
+        <br>
+        <span>Password</span><input type="text" id="password">
+        <br>
+        <input type="submit" value="submit" onclick=logIn()>
+    </div>
+
+
+    <div id="test"></div>
+
+    <script>
+        const xhttp = new XMLHttpRequest();
+        let endPointRoot = "http://localhost:3000/"
+        function logIn() {
+            let userIdSt = document.getElementById("UserId").value;
+            let passwordSt = document.getElementById("password").value;
+
+            let logInJSON = {
+                userId: "hs", password: "b"
+            };
+            let obj = JSON.stringify(logInJSON);
+            console.log(obj);
+            let resource = "users/login"
+            xhttp.open("POST", endPointRoot + resource, true);
+            // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(obj);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("test").innerHTML = this.responseText;
+
+                    if (this.responseText == "success") {
+                        console.log(this.responseText)
+                        // let message = document.createElement('form');
+                        // message.action = 'file:///C:/Users/dydwn/Documents/GitHub/COMP4537_project/home.html';
+                        // message.method = "post";
+                        // message.value = "success"
+
+                        window.location.href = `file:///C:/Users/dydwn/Documents/GitHub/COMP4537_project/home.html?success`;
+                    }
+
+                }
+            };
+        }
+
+    </script>
+</body>
+
+</html>

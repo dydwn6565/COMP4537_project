@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <input type="button" onclick="post()" value="create Medical Staff">
+    <input type="button" onclick="put()" value="update Medical Staff">
+    <input type="button" onclick="get()" value="get Medical Staff List">
+    <input type="button" onclick="del()" value="create Staff">
+    <div>
+        <h1>medical Staff</h1>
+        <span>Name</span><input type="text" id="staffName">
+        <br>
+        <span>Position</span><input type="text" id="staffPosition">
+        <br>
+
+    </div>
+    <div id="post" onclick="post()"></div>
+    <div id="get" onclick="get()"></div>
+    <div id="put" onclick="put()"></div>
+    <div id="delete" onclick="del()"></div>
+</head>
+
+<body>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        const endPointRoot = "http://localhost:3000/";
+
+        function post() {
+            resource = "medicalStaff/"
+
+            let staffName = getElementById("staffName").value;
+            let staffPosition = getElementById("staffPosition").value;
+
+            let medicalStaff = {
+                name: staffName, position: staffPosition
+            };
+
+            let obj = JSON.stringify(medicalStaff);
+            xhttp.open("POST", endPointRoot + resource, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(obj);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+        }
+
+        function put() {
+            resource = "medicalStaff/"
+            xhttp.open("PUT", endPointRoot + resource, true);
+            xhttp.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            xhttp.send(params)
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+        }
+
+        function del() {
+            resource = "medicalStaff/"
+            xhttp.open("DELETE", endPointRoot + resource, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+        }
+
+        function get() {
+            resource = "medicalStaff/";
+            xhttp.open("GET", endPointRoot + resource, true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("demo").innerHTML = this.responseText;
+                }
+            };
+        }
+
+
+    </script>
+</body>
+
+</html>

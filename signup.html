@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <!-- <div>
+        <h1>signUp</h1>
+        <span>UserID </span><input type="text" id="UserId">
+        <br>
+        <span>Password</span><input type="text" id="password">
+        <br>
+        <input type="submit" value="submit" onclick=signUp()>
+    </div> -->
+
+    <form>
+        <div class="form-group">
+            <label for="exampleInputEmail1">Email address</label>
+            <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email" id="email">
+
+        </div>
+        <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input type="password" class="form-control" placeholder="Password" id="password">
+        </div>
+
+    </form>
+    <button type="submit" class="btn btn-primary" onclick="signUp()">Submit</button>
+    <div id="condition"></div>
+
+
+    <script>
+        const xhttp = new XMLHttpRequest();
+        let endPointRoot = "http://localhost:3000/"
+
+        function signUp() {
+            let userIdSt = document.getElementById("email").value;
+            let passwordSt = document.getElementById("password").value;
+            console.log(userIdSt);
+            console.log(passwordSt)
+            let logInJSON = {
+                userId: userIdSt, password: passwordSt
+            };
+            let obj = JSON.stringify(logInJSON);
+            console.log(obj);
+            let resource = "users"
+            xhttp.open("POST", endPointRoot + resource, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(obj);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("condition").innerHTML = this.responseText;
+                    console.log(this.responseText)
+                    // document.getElementById("test").innerHTML = "hi";
+                }
+            };
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "COMP4537_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "login.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dydwn6565/COMP4537_project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dydwn6565/COMP4537_project/issues"
+  },
+  "homepage": "https://github.com/dydwn6565/COMP4537_project#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "jsonfile": "^6.1.0",
+    "nodemon": "^2.0.7"
+  }
+}
