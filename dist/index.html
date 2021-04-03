@@ -1,0 +1,90 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Swagger UI</title>
+  <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+  <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+  <style>
+    html {
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
+    }
+
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
+
+    body {
+      margin: 0;
+      background: #fafafa;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="swagger-ui"></div>
+
+  <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
+  <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
+  <script>
+    let a;
+    window.onload = function () {
+      // Begin Swagger UI call region
+      const ui = SwaggerUIBundle({
+        url: "http://localhost:3000/clientSwaggers",
+        dom_id: '#swagger-ui',
+        deepLinking: true,
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIStandalonePreset
+        ],
+        plugins: [
+          SwaggerUIBundle.plugins.DownloadUrl
+        ],
+        layout: "StandaloneLayout"
+      });
+      // End Swagger UI call region
+
+      window.ui = ui;
+    };
+
+
+    const xhttp = new XMLHttpRequest();
+    let endPointRoot = "http://localhost:3000/"
+    function swaggers() {
+
+      let resource = "swaggers/"
+      xhttp.open("Get", endPointRoot + resource, true);
+      // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.send();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // document.getElementById("test").innerHTML = this.responseText;
+          a = JSON.parse(this.responseText);
+          console.log(a);
+          // if (this.responseText == "success") {
+          // console.log(this.responseText)
+          // let message = document.createElement('form');
+          // message.action = 'file:///C:/Users/dydwn/Documents/GitHub/COMP4537_project/home.html';
+          // message.method = "post";
+          // message.value = "success"
+
+
+          // }
+
+        }
+      };
+    }
+    swaggers()
+
+  </script>
+</body>
+
+</html>

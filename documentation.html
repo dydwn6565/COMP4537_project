@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- <script type="text/javascript" src="clientSwaggers.json"></script> -->
+</head>
+
+<body>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        let endPointRoot = "http://localhost:3000/"
+        function swaggers() {
+
+            let resource = "swaggers/"
+            xhttp.open("Get", endPointRoot + resource, true);
+            // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // document.getElementById("test").innerHTML = this.responseText;
+                    let a = JSON.parse(this.responseText);
+                    console.log(a);
+                    // if (this.responseText == "success") {
+                    // console.log(this.responseText)
+                    // let message = document.createElement('form');
+                    // message.action = 'file:///C:/Users/dydwn/Documents/GitHub/COMP4537_project/home.html';
+                    // message.method = "post";
+                    // message.value = "success"
+
+
+                    // }
+
+                }
+            };
+        }
+        swaggers()
+    </script>
+</body>
+
+</html>

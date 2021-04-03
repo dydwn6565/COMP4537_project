@@ -4,9 +4,34 @@ const bodyParser = require("body-parser");
 const app = express();
 const bcrypt = require("bcrypt");
 const mysql = require("mysql");
-const PORT = process.env.PORT || 3000;
+const path = require("path");
+
 let postHit = 0;
 let getHit = 0;
+
+app.use("/static", express.static(__dirname + "/"));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, ".//home.html"));
+});
+
+app.get("/logIn", (req, res) => {
+  res.sendFile(path.join(__dirname, ".//login.html"));
+});
+
+app.get("/signUp", (req, res) => {
+  res.sendFile(path.join(__dirname, ".//signup.html"));
+});
+
+app.get("/clientSwaggers", (req, res) => {
+  res.sendFile(path.join(__dirname, ".//clientSwaggers.json"));
+});
+
+app.set("port", process.env.PORT || 3000);
+
+app.listen(app.get("port"), () => {
+  console.log(app.get("port"), "connected");
+});
+
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -34,7 +59,7 @@ db.promise = (sql) => {
 };
 
 app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.header(
     "Access-Control-Allow-Headers",
@@ -197,4 +222,12 @@ app.delete("/medicalStaff", (req, res) => {
     }
   );
 });
-app.listen(3000);
+
+app.get("/swaggers", (req, res) => {
+  const fs = require("fs");
+  let rawdata = fs.readFileSync("clientSwaggers.json");
+  let student = JSON.parse(rawdata);
+  console.log(student);
+
+  res.send(student);
+});
