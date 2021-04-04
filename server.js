@@ -178,30 +178,58 @@ app.get("/postHitRate", (req, res) => {
 });
 
 app.get("/medicalStaff", (req, res) => {
-  connection.query(
-    "SELECT * FROM patient where patientsid=1",
-    (err, result) => {
-      if (err) throw err;
-      console.log(result);
-    }
-  );
+  db.query("SELECT * FROM medicalstaff", (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
 });
 
 app.post("/medicalStaff", (req, res) => {
-  connection.query(
-    'INSERT INTO medicalstaff(name,position) values("Yong","Attending Physician")',
-    (err, result) => {
-      if (err) {
-        throw error;
-      }
-      console.timeLog(result);
+  let body = "";
+
+  req.on("data", function (chunk) {
+    if (chunk != null) {
+      body += chunk;
     }
-  );
+  });
+
+  req.on("end", async function () {
+    let staffString = JSON.parse(body);
+    // console.log(staffString);
+
+    let checkDupStart = `Select count(*) from medicalstaff where (name=${staffString.name} and  "${staffString.start_at}" Between start_at And end_at) or (name=${staffString.name} and  "${staffString.end_at}" Between start_at And end_at)`;
+    // let checkDupEnd = `Select count(*)from medicalstaff where name=${staffString.name} and  "${staffString.end_at}" Between start_at And end_at`;
+    let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at) values("${staffString.name}","${staffString.position}","${staffString.start_at}","${staffString.end_at}")`;
+    db.promise(checkDupStart, (err, result) => {
+      if (err) {
+        throw err;
+      }
+      // console.log(result);
+    }).then(
+      (result) => {
+        console.log(result);
+        if (result["count(*)"] > 0) {
+          res.send("can not set this time");
+        } else {
+          db.query(inSertMedicalStaff),
+            (err, result) => {
+              if (err) {
+                throw err;
+              }
+              console.log("instered");
+              res.send("instered");
+            };
+        }
+      }
+
+      //   console.log("line115");
+    );
+  });
 });
 
 app.put("/medicalStaff", (req, res) => {
-  connection.query(
-    `update patient set name = "Sara Melody" where patientsid =1`,
+  db.query(
+    `update medicalstaff set name = "Sara Melody" where name ="Yong"`,
     (err, result) => {
       if (err) {
         throw err;
@@ -212,15 +240,12 @@ app.put("/medicalStaff", (req, res) => {
 });
 
 app.delete("/medicalStaff", (req, res) => {
-  connection.query(
-    `update patient set name = "Sara Melody" where patientsid =1`,
-    (err, result) => {
-      if (err) {
-        throw err;
-      }
-      console.log(result);
+  db.query(`delete from medicalstaff where id =1`, (err, result) => {
+    if (err) {
+      throw err;
     }
-  );
+    console.log(result);
+  });
 });
 
 app.get("/swaggers", (req, res) => {
