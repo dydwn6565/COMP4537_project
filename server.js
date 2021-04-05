@@ -197,18 +197,18 @@ app.post("/medicalStaff", (req, res) => {
     let staffString = JSON.parse(body);
     // console.log(staffString);
 
-    let checkDupStart = `Select count(*) from medicalstaff where (name=${staffString.name} and  "${staffString.start_at}" Between start_at And end_at) or (name=${staffString.name} and  "${staffString.end_at}" Between start_at And end_at)`;
+    let checkDupStart = `Select count(*) from medicalstaff where (name="${staffString.name}" and  "${staffString.start_at}" Between start_at And end_at) or (name="${staffString.name}" and  "${staffString.end_at}" Between start_at And end_at)`;
     // let checkDupEnd = `Select count(*)from medicalstaff where name=${staffString.name} and  "${staffString.end_at}" Between start_at And end_at`;
     let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at) values("${staffString.name}","${staffString.position}","${staffString.start_at}","${staffString.end_at}")`;
     db.promise(checkDupStart, (err, result) => {
       if (err) {
         throw err;
       }
-      // console.log(result);
     }).then(
       (result) => {
         console.log(result);
-        if (result["count(*)"] > 0) {
+
+        if (result[0]["count(*)"] > 0) {
           res.send("can not set this time");
         } else {
           db.query(inSertMedicalStaff),
@@ -228,24 +228,110 @@ app.post("/medicalStaff", (req, res) => {
 });
 
 app.put("/medicalStaff", (req, res) => {
-  db.query(
-    `update medicalstaff set name = "Sara Melody" where name ="Yong"`,
-    (err, result) => {
+  let body = "";
+
+  req.on("data", function (chunk) {
+    if (chunk != null) {
+      body += chunk;
+    }
+  });
+
+  req.on("end", async function () {
+    let staffString = JSON.parse(body);
+    console.log(staffString);
+
+    let getName = `Select name from medicalstaff where id=${staffString.update_num}`;
+    // let checkDupStart = `Select count(*) from medicalstaff where (name = ${
+    //   staffString.name
+    // }
+    //                          and  "${parseInt(
+    //                            staffString.start_at
+    //                          )}" Between start_at And end_at)
+    //                          or (name = ${parseInt(staffString.name)} and  "${
+    //   staffString.end_at
+    // }" Between start_at And end_at)`;
+
+    // let updateMedicalStaff = `UPDATE  medicalstaff set name = ${staffString.name}, position =${staffString.position},start_at = ${staffString.start_at},end_at=${staffString.end_at} where=${staffString.update_num} `;
+    db.promise(getName, (err, result) => {
       if (err) {
         throw err;
       }
-      console.log(result);
-    }
-  );
+    }).then(
+      (result) => {
+        console.log(result[0]["name"]);
+        let checkDupStart = `Select count(*) from medicalstaff where (name = "${
+          result[0]["name"]
+        }"  
+                                 and  "${parseInt(
+                                   staffString.start_at
+                                 )}" Between start_at And end_at) 
+                                 or (name = ${parseInt(
+                                   result[0]["name"]
+                                 )} and  "${
+          staffString.end_at
+        }" Between start_at And end_at)`;
+        let updateMedicalStaff = `UPDATE  medicalstaff set name = "${
+          staffString.name
+        }", position ="${staffString.position}",start_at = "${
+          staffString.start_at
+        }",end_at="${staffString.end_at}" where Id =${parseInt(
+          staffString.update_num
+        )}`;
+
+        db.promise(checkDupStart, (err, result) => {
+          if (err) {
+            throw err;
+          }
+        }).then((result) => {
+          console.log(result);
+          if (result[0]["count(*)"] > 0) {
+            res.send("can not set this time");
+          } else {
+            db.query(updateMedicalStaff),
+              (err, result) => {
+                if (err) {
+                  throw err;
+                }
+                console.log("instered");
+                res.send("instered");
+              };
+          }
+        });
+      }
+
+      //   console.log("line115");
+    );
+  });
 });
 
-app.delete("/medicalStaff", (req, res) => {
-  db.query(`delete from medicalstaff where id =1`, (err, result) => {
+app.delete("/medicalStaff/:id", (req, res) => {
+  console.log(req.params.id.split(":")[1]);
+  let reSetNum = "ALTER TABLE medicalstaff AUTO_INCREMENT =1";
+  let deleRow = `DELETE FROM medicalstaff where id=${
+    req.params.id.split(":")[1]
+  }`;
+
+  //   req.params.id.split(":")[1]
+  // }"`;
+  db.promise(deleRow, (err, result) => {
     if (err) {
       throw err;
     }
-    console.log(result);
-  });
+  }).then(
+    (result) => {
+      console.log("inside");
+      db.query(reSetNum),
+        (err, result) => {
+          if (err) {
+            throw err;
+          }
+          console.log("instered");
+          res.send("instered");
+        };
+    }
+
+    //   console.log("line115");
+  );
 });
 
 app.get("/swaggers", (req, res) => {
@@ -255,4 +341,14 @@ app.get("/swaggers", (req, res) => {
   console.log(student);
 
   res.send(student);
+});
+
+app.post("/medicalStaff/reset", (req, res) => {
+  let reSetNum = "ALTER TABLE medicalstaff AUTO_INCREMENT = 1";
+  db.query(reSetNum, (err, result) => {
+    if (err) {
+      throw err;
+    }
+    console.log("inside Post");
+  });
 });

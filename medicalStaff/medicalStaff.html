@@ -54,13 +54,21 @@
         <input type="date" id="picker_ed" name="trip-start" min="2020-01-01" max="2025-12-31">
         <label for="ed_time">Time</label>
         <input type="time" id="picker_ed_time">
+        <br />
+        <h4>Please type number when you want to update</h4>
+        <span>Update Num:</span><input type="text" id="update">
+        <br>
     </div>
     <input type="button" onclick="post()" value="create Medical Staff">
     <input type="button" onclick="put()" value="update Medical Staff">
     <input type="button" onclick="get()" value="get Medical Staff List">
     <input type="button" onclick="del()" value="delete Medical Staff">
+    <div id="checkCondition">1</div>
     <h3>Schedule list</h3>
     <div class="row">
+        <div class="column">
+            <h3>Number</h3>
+        </div>
         <div class="column">
             <h3>Name</h3>
         </div>
@@ -73,8 +81,11 @@
         <div class="column">
             <h3>End Date</h3>
         </div>
+
     </div>
     <div class="rows">
+        <div class="columns" id="number">
+        </div>
         <div class="columns" id="name">
 
         </div>
@@ -94,7 +105,7 @@
 
         function post() {
             resource = "medicalStaff/"
-            picker_st_time
+
             let staffName = document.getElementById("staffName").value;
             let staffPosition = document.getElementById("staffPosition").value;
             let stDate = document.getElementById("picker_st").value;
@@ -116,16 +127,34 @@
             xhttp.send(obj);
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    document.getElementById("demo").innerHTML = this.responseText;
+                    document.getElementById("checkCondition").innerHTML = this.responseText;
                 }
             };
         }
 
         function put() {
             resource = "medicalStaff/"
+
+            let staffName = document.getElementById("staffName").value;
+            let staffPosition = document.getElementById("staffPosition").value;
+            let stDate = document.getElementById("picker_st").value;
+            let stTime = document.getElementById("picker_st_time").value;
+            let edDate = document.getElementById("picker_ed").value;
+            let edTime = document.getElementById("picker_ed_time").value;
+            let upNum = document.getElementById("update").value;
+            console.log(stDate)
+            console.log(stTime)
+            let medicalStaff = {
+                name: staffName, position: staffPosition, start_at: stDate + " " + stTime, end_at: edDate + " " + edTime, update_num: upNum
+            };
+            console.log(medicalStaff)
+
+
+            let obj = JSON.stringify(medicalStaff);
+            console.log(obj)
             xhttp.open("PUT", endPointRoot + resource, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhttp.send()
+            xhttp.send(obj)
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     document.getElementById("demo").innerHTML = this.responseText;
@@ -134,8 +163,13 @@
         }
 
         function del() {
-            resource = "medicalStaff/"
-            xhttp.open("DELETE", endPointRoot + resource, true);
+            resource = "medicalStaff/:"
+            let upNum = document.getElementById("update").value;
+            let medicalStaff = {
+                update_num: upNum
+            };
+            let obj = JSON.stringify(medicalStaff);
+            xhttp.open("DELETE", endPointRoot + resource + upNum, true);
             xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhttp.send();
             xhttp.onreadystatechange = function () {
@@ -155,14 +189,16 @@
                     let position = "";
                     let stDate = "";
                     let edDate = "";
-
+                    let num = "";
                     let obj = JSON.parse(this.responseText)
-                    console.log(obj.length)
+                    console.log(obj)
                     for (let x of obj) {
+                        console.log(x.Id - 2)
                         let st = x.start_at;
                         let strToDate_st = new Date(st);
                         let ed = x.end_at;
                         let strToDate_ed = new Date(ed);
+                        num += (x.Id) + "<br/>" + "<br/>"
                         name += x.name + "<br/>" + "<br/>"
                         position += x.position + "<br/>" + "<br/>"
                         stDate += strToDate_st.toUTCString() + "<br/>" + "<br/>"
@@ -176,11 +212,22 @@
                     document.getElementById("position").innerHTML = position;
                     document.getElementById("start").innerHTML = stDate;
                     document.getElementById("end").innerHTML = edDate;
+                    document.getElementById("number").innerHTML = num;
                 }
             };
         }
-
-
+        function reset() {
+            resource = "medicalStaff/reset";
+            xhttp.open("POST", endPointRoot + resource, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("checkCondition").innerHTML = this.responseText;
+                }
+            };
+        }
+        reset();
     </script>
 </body>
 
